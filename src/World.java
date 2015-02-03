@@ -1,14 +1,15 @@
 public class World {
-	public final int Size;
+	public final int SizeX;
+	public final int SizeY;
 	public Enums.GridValues[][] Grid;
 
-	public World(int size) {
-		Size = size;
-		
-		Grid = new Enums.GridValues[Size][Size];
+	public World(int sizeX, int sizeY) {
+		SizeX = sizeX;
+		SizeY = sizeY;
+		Grid = new Enums.GridValues[SizeX][SizeY];
 
-		for (int columns = 0; columns < Size; columns++) {
-			for (int rows = 0; rows < Size; rows++)
+		for (int columns = 0; columns < SizeX; columns++) {
+			for (int rows = 0; rows < SizeY; rows++)
 				Grid[columns][rows] = Enums.GridValues.Empty;
 		}
 
@@ -16,9 +17,9 @@ public class World {
 
 	public String toString() {
 		String result = "";
-		for (int rows = 0; rows < Size; rows++) {
-			for (int columns = 0; columns < Size; columns++) {
-				result += Grid[columns][rows].toString() + " ";
+		for (int rows = 0; rows < SizeX; rows++) {
+			for (int columns = 0; columns < SizeY; columns++) {
+				result += Grid[rows][columns].toString() + " ";
 			}
 
 			result += "\n";

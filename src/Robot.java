@@ -12,12 +12,14 @@ public class Robot {
 	int _goalX;
 	int _goalY;
 
-	final int _maxSpace;
+	final int _maxSpaceX;
+	final int _maxSpaceY;
 
 	public Robot(World grid, int startingX, int startingY, int goalX, int goalY) {
 		_grid = grid;
-		_personalGrid = new World(grid.Size);
-		_maxSpace = grid.Size - 1;
+		_personalGrid = new World(grid.SizeX, grid.SizeY);
+		_maxSpaceX = grid.SizeX - 1;
+		_maxSpaceY = grid.SizeY - 1;
 
 		_currentX = startingX;
 		_currentY = startingY;
@@ -95,6 +97,7 @@ public class Robot {
 			break;
 		case None:
 			result = true;
+			
 			System.out.println("Your done!!!");
 			break;
 		case Right:
@@ -120,7 +123,7 @@ public class Robot {
 	public Boolean MoveDown() {
 		Boolean result = false;
 
-		if (_currentY < _maxSpace) {
+		if (_currentY < _maxSpaceY) {
 			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
 
 			_currentY++;
@@ -179,7 +182,7 @@ public class Robot {
 	public Boolean MoveUpRight() {
 		Boolean result = false;
 
-		if (_currentY > 0 || _currentX < _maxSpace) {
+		if (_currentY > 0 || _currentX < _maxSpaceX) {
 			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
 			_currentY--;
 			_currentX++;
@@ -199,7 +202,7 @@ public class Robot {
 	public Boolean MoveDownLeft() {
 		Boolean result = false;
 
-		if (_currentY < _maxSpace || _currentX > 0) {
+		if (_currentY < _maxSpaceY || _currentX > 0) {
 			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
 			_currentY++;
 			_currentX--;
@@ -219,7 +222,7 @@ public class Robot {
 	public Boolean MoveDownRight() {
 		Boolean result = false;
 
-		if (_currentY < _maxSpace || _currentX < _maxSpace) {
+		if (_currentY < _maxSpaceY || _currentX < _maxSpaceX) {
 			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
 			_currentY++;
 			_currentX++;
@@ -239,7 +242,7 @@ public class Robot {
 	public Boolean MoveRight() {
 		Boolean result = false;
 
-		if (_currentX < _grid.Size) {
+		if (_currentX < _maxSpaceX) {
 			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
 			_currentX++;
 			result = true;
