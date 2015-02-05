@@ -14,7 +14,8 @@ public class Robot {
 
 	final int _maxSpaceX;
 	final int _maxSpaceY;
-
+	final int _maxNumberObstacles = 3; 
+	
 	public Robot(World grid, int startingX, int startingY, int goalX, int goalY) {
 		_grid = grid;
 		_personalGrid = new World(grid.SizeX, grid.SizeY);
@@ -36,13 +37,14 @@ public class Robot {
 		Boolean reachedGoal = false;
 
 		do {
-			reachedGoal = Move(GetNextMove());
+			reachedGoal = Move(GetOrientationBasedOnMovement());
+			numberOfMoves++;
 		} while (!reachedGoal);
 
 		return numberOfMoves;
 	}
 
-	public Enums.Orientation GetNextMove() {
+	public Enums.Orientation GetOrientationBasedOnMovement() {
 		Enums.Orientation result = Enums.Orientation.Down;
 
 		int resultX = _goalX - _currentX;
@@ -79,6 +81,51 @@ public class Robot {
 
 	}
 
+	public int[] GetNextPositionBasedOnOrientation(Enums.Orientation orientation)
+	{
+		int[] result = new int[2];
+		switch (orientation) {
+		case Down:
+			result[0] = 0;
+			result[1] = 1;
+			break;
+		case DownLeft:
+			result[0] = -1;
+			result[1] = 1;
+			break;
+		case DownRight:
+			result[0] = 1;
+			result[1] = 1;
+			break;
+		case Left:
+			result[0] = -1;
+			result[1] = 0;
+			break;
+		case None:
+			result[0] = 0;
+			result[1] = 0;
+			break;
+		case Right:
+			result[0] = 1;
+			result[1] = 0;
+			break;
+		case Up:
+			result[0] = 0;
+			result[1] = -1;
+			break;
+		case UpLeft:
+			result[0] = -1;
+			result[1] = -1;
+			break;
+		case UpRight:
+			result[0] = 1;
+			result[1] = -1;
+			break;
+		}
+		
+		return result;
+	}
+	
 	public Boolean Move(Enums.Orientation orientation) {
 		Boolean result = false;
 
@@ -97,7 +144,6 @@ public class Robot {
 			break;
 		case None:
 			result = true;
-			
 			System.out.println("Your done!!!");
 			break;
 		case Right:
@@ -131,7 +177,7 @@ public class Robot {
 			SetCurrent();
 			result = true;
 
-			System.err.println("Moved Down");
+			System.err.println("Moved Down : X,Y++");
 		} else {
 			System.err.println("Reached end: Down");
 
@@ -202,7 +248,7 @@ public class Robot {
 	public Boolean MoveDownLeft() {
 		Boolean result = false;
 
-		if (_currentY < _maxSpaceY || _currentX > 0) {
+		if (_currentY < _maxSpaceY && _currentX > 0) {
 			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
 			_currentY++;
 			_currentX--;
@@ -210,10 +256,9 @@ public class Robot {
 			Orientation = Enums.Orientation.DownLeft;
 			SetCurrent();
 
-			System.err.println("Moved DownLeft");
+			System.err.println("Moved DownLeft. X--, Y++" );
 		} else {
-			System.err.println("Reached end: DownLeft");
-
+			System.err.println("Reached end: DownLeft.  X--, Y++");
 		}
 
 		return result;
@@ -230,9 +275,9 @@ public class Robot {
 			Orientation = Enums.Orientation.DownRight;
 			SetCurrent();
 
-			System.err.println("Moved DownRight");
+			System.err.println("Moved DownRight: X++, Y++");
 		} else {
-			System.err.println("Reached end: DownRight");
+			System.err.println("Reached end: DownRight. X++, Y++");
 
 		}
 
@@ -280,4 +325,52 @@ public class Robot {
 	private void SetCurrent() {
 		_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Current;
 	}
+	
+	public int[][] ScanForObstacles()
+	{
+		int[][] result = new int [_maxNumberObstacles][_maxNumberObstacles];
+		
+		int [] lineToScan = this.GetNextPositionBasedOnOrientation(Orientation);
+		
+		Scan(lineToScan);
+		
+		
+		return result;
+	}
+
+	private void Scan(int[] lineToScan) {
+		if (lineToScan.length != 2)
+		{
+			Log("Something went wrong, lineToScan is diff than 2");
+			return;
+		}
+		
+		Boolean foundObstacle = false;
+		
+		int x = _currentX + (1 * lineToScan[0]);
+		int y = _currentY + (1 * lineToScan[1]);
+		
+		while (!foundObstacle && ValidGridSpace(x, y))
+		{
+			if (_grid.Grid[x][y] == Enums.GridValues.Obstacle)
+			{
+				Log("Found Obstacle");
+				break;
+			}
+			
+			x = x + (1 * lineToScan[0]);
+			y = y + (1 * lineToScan[1]);
+		}
+		
+		
+	}
+
+	private boolean ValidGridSpace(int x, int y) {
+		return x <= _maxSpaceX && y <= _maxSpaceY && x >= 0 && y >= 0;
+	}
+
+	private void Log(String string) {
+		System.err.println(string);
+	}
+
 }

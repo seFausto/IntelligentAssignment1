@@ -1,15 +1,16 @@
+//import Enums.Orientation;
+
 public class ExpertSystem {
 
 	public static void main(String[] args) {
 
-		World world = new World(25, 25);
-
-		Robot robot = new Robot(world, 0,0, 5,14);
-
-		robot.MoveTowardsGoal();
+		World world = new World(5, 5);
 		
-		System.out.println(robot._personalGrid.toString());
-		
+		world.Grid[0][3]= Enums.GridValues.Obstacle;
+
+		Robot robot = new Robot(world, 0, 0, 4, 4);
+
+		robot.ScanForObstacles();
+
 	}
-
 }
