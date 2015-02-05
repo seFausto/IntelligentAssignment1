@@ -4,7 +4,8 @@ public class Enums {
 	}
 	
 	public enum Orientation{
-		Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight, None
+		Up, UpRight, Right, DownRight, Down, DownLeft, Left, UpLeft, None
+		//Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight, None
 	}
 
 }

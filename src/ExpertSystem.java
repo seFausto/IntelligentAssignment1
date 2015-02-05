@@ -6,11 +6,11 @@ public class ExpertSystem {
 
 		World world = new World(5, 5);
 
-		world.Grid[0][3] = Enums.GridValues.O;
-		world.Grid[4][0] = Enums.GridValues.O;
-		world.Grid[0][4] = Enums.GridValues.O;
-		world.Grid[1][2] = Enums.GridValues.O;
-		Robot robot = new Robot(world, 0, 1, 4, 4);
+		//world.Grid[0][3] = Enums.GridValues.O;
+		//world.Grid[4][0] = Enums.GridValues.O;
+		//world.Grid[0][4] = Enums.GridValues.O;
+		//world.Grid[1][2] = Enums.GridValues.O;
+		Robot robot = new Robot(world, 0, 0, 4, 4);
 		
 		robot.MoveTowardsGoal();
 		

@@ -35,13 +35,53 @@ public class Robot {
 	public int MoveTowardsGoal() {
 		int numberOfMoves = 0;
 		Boolean reachedGoal = false;
-
+		// Enums.Orientation orientation = Orientation;
 		do {
-			reachedGoal = Move(GetOrientationBasedOnMovement());
+			ScanForObstacles();
+			Orientation = GetOrientationBasedOnMovement();
+			int[] movement = GetNextMove(Orientation);
+			int[] nextPosition = GetNextPosition(_currentX, _currentY,
+					movement[0], movement[1]);
+
+			// Check if it can move in the intended direction
+			if (IsValidGridSpace(nextPosition[0], nextPosition[1])) {
+				if (IsSpaceEmpty(nextPosition[0], nextPosition[1])) {
+					reachedGoal = Move(GetOrientationBasedOnMovement());
+				}
+				else
+				{
+					Orientation = GetNextOrientation(Orientation, true);
+				}
+			}
+			else
+			{
+				Orientation = GetNextOrientation(Orientation, true);
+			}
+
 			numberOfMoves++;
 		} while (!reachedGoal);
 
 		return numberOfMoves;
+	}
+
+	private Enums.Orientation GetNextOrientation(
+			Enums.Orientation orientation, boolean rotateClockwise) {
+		Enums.Orientation result = Enums.Orientation.None;
+		
+		if (rotateClockwise)
+		{}
+		else
+		{}
+		
+		return result;
+	}
+
+	public Boolean IsSpaceEmpty(int x, int y) {
+
+		if (_personalGrid.Grid[x][y] == Enums.GridValues.O)
+			return false;
+
+		return true;
 	}
 
 	public Enums.Orientation GetOrientationBasedOnMovement() {
@@ -81,7 +121,7 @@ public class Robot {
 
 	}
 
-	public int[] GetNextPositionBasedOnOrientation(Enums.Orientation orientation) {
+	public int[] GetNextMove(Enums.Orientation orientation) {
 		int[] result = new int[2];
 		switch (orientation) {
 		case Down:
@@ -324,14 +364,20 @@ public class Robot {
 		_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.C;
 	}
 
-	public int[][] ScanForObstacles() {
-		int[][] result = new int[_maxNumberObstacles][_maxNumberObstacles];
-
+	public void ScanForObstacles() {
 		Enums.Orientation[] scanLineOrientations = GetScanLineOrientations(this.Orientation);
 
 		for (int i = 0; i < scanLineOrientations.length; i++) {
-			Scan(GetNextPositionBasedOnOrientation(scanLineOrientations[i]));
+			Scan(GetNextMove(scanLineOrientations[i]));
 		}
+
+	}
+
+	public int[] GetNextPosition(int x, int y, int moveX, int moveY) {
+		int[] result = new int[2];
+
+		result[0] = x + (1 * moveX);
+		result[1] = y + (1 * moveY);
 
 		return result;
 	}
@@ -344,18 +390,21 @@ public class Robot {
 
 		Boolean foundObstacle = false;
 
-		int x = _currentX + (1 * lineToScan[0]);
-		int y = _currentY + (1 * lineToScan[1]);
+		int x = GetNextPosition(_currentX, _currentY, lineToScan[0],
+				lineToScan[1])[0];
+		int y = GetNextPosition(_currentX, _currentY, lineToScan[0],
+				lineToScan[1])[1];
 
-		while (!foundObstacle && ValidGridSpace(x, y)) {
+		while (!foundObstacle && IsValidGridSpace(x, y)) {
 
 			if (_grid.Grid[x][y] == Enums.GridValues.O) {
 				_personalGrid.Grid[x][y] = Enums.GridValues.O;
 				break;
 			}
 
-			x = x + (1 * lineToScan[0]);
-			y = y + (1 * lineToScan[1]);
+			int[] next = GetNextPosition(x, y, lineToScan[0], lineToScan[1]);
+			x = next[0];
+			y = next[1];
 		}
 
 	}
@@ -411,7 +460,7 @@ public class Robot {
 
 	}
 
-	private boolean ValidGridSpace(int x, int y) {
+	private boolean IsValidGridSpace(int x, int y) {
 		return x <= _maxSpaceX && y <= _maxSpaceY && x >= 0 && y >= 0;
 	}
 
