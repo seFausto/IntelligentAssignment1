@@ -1,6 +1,6 @@
 public class Enums {
 	public enum GridValues {
-		Empty, Obstacle, Goal, Visited, Current
+		E, O, G, V, C
 	}
 	
 	public enum Orientation{

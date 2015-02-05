@@ -10,7 +10,7 @@ public class World {
 
 		for (int columns = 0; columns < SizeX; columns++) {
 			for (int rows = 0; rows < SizeY; rows++)
-				Grid[columns][rows] = Enums.GridValues.Empty;
+				Grid[columns][rows] = Enums.GridValues.E;
 		}
 
 	}
@@ -19,7 +19,7 @@ public class World {
 		String result = "";
 		for (int rows = 0; rows < SizeX; rows++) {
 			for (int columns = 0; columns < SizeY; columns++) {
-				result += Grid[rows][columns].toString() + " ";
+				result += Grid[columns][rows].toString() + " ";
 			}
 
 			result += "\n";

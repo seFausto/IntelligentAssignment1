@@ -158,7 +158,7 @@ public class Robot {
 			MoveUpRight();
 			break;
 		default:
-			System.out.println("Error!!1!!ONE!");
+			Log("Error!!1!!ONE!");
 			break;
 		}
 
@@ -169,16 +169,16 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentY < _maxSpaceY) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 
 			_currentY++;
 			Orientation = Enums.Orientation.Down;
 			SetCurrent();
 			result = true;
 
-			System.err.println("Moved Down : X,Y++");
+			Log("Moved Down : X,Y++");
 		} else {
-			System.err.println("Reached end: Down");
+			Log("Reached end: Down. X,Y++");
 
 		}
 
@@ -189,15 +189,15 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentY > 0) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentY--;
 			result = true;
 			Orientation = Enums.Orientation.Up;
 			SetCurrent();
 
-			System.err.println("Moved Up");
+			Log("Moved Up. X, Y--");
 		} else {
-			System.err.println("Reached end: Up");
+			Log("Reached end: Up. X, Y--");
 
 		}
 
@@ -208,16 +208,16 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentY > 0 || _currentX > 0) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentY--;
 			_currentX--;
 			result = true;
 			Orientation = Enums.Orientation.UpLeft;
 			SetCurrent();
 
-			System.err.println("Moved UpLeft");
+			Log("Moved UpLeft. X--, Y--");
 		} else {
-			System.err.println("Reached end: UpLeft");
+			Log("Reached end: UpLeft. X--, Y--");
 
 		}
 
@@ -228,16 +228,16 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentY > 0 || _currentX < _maxSpaceX) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentY--;
 			_currentX++;
 			result = true;
 			Orientation = Enums.Orientation.UpRight;
 			SetCurrent();
 
-			System.err.println("Moved UpRight");
+			Log("Moved UpRight. X++,Y--");
 		} else {
-			System.err.println("Reached end: UpRight");
+			Log("Reached end: UpRight. X++,Y--");
 
 		}
 
@@ -248,16 +248,16 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentY < _maxSpaceY && _currentX > 0) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentY++;
 			_currentX--;
 			result = true;
 			Orientation = Enums.Orientation.DownLeft;
 			SetCurrent();
 
-			System.err.println("Moved DownLeft. X--, Y++");
+			Log("Moved DownLeft. X--, Y++");
 		} else {
-			System.err.println("Reached end: DownLeft.  X--, Y++");
+			Log("Reached end: DownLeft.  X--, Y++");
 		}
 
 		return result;
@@ -267,17 +267,16 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentY < _maxSpaceY || _currentX < _maxSpaceX) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentY++;
 			_currentX++;
 			result = true;
 			Orientation = Enums.Orientation.DownRight;
 			SetCurrent();
 
-			System.err.println("Moved DownRight: X++, Y++");
+			Log("Moved DownRight: X++, Y++");
 		} else {
-			System.err.println("Reached end: DownRight. X++, Y++");
-
+			Log("Reached end: DownRight. X++, Y++");
 		}
 
 		return result;
@@ -287,15 +286,15 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentX < _maxSpaceX) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentX++;
 			result = true;
 			Orientation = Enums.Orientation.Right;
 			SetCurrent();
 
-			System.err.println("Moved Right");
+			Log("Moved Right. X++, Y");
 		} else {
-			System.err.println("Reached end: Right");
+			Log("Reached end: Right. X++, Y");
 
 		}
 
@@ -306,15 +305,15 @@ public class Robot {
 		Boolean result = false;
 
 		if (_currentX > 0) {
-			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Visited;
+			_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.V;
 			_currentX--;
 			result = true;
 			Orientation = Enums.Orientation.Left;
 			SetCurrent();
 
-			System.err.println("Moved Left");
+			Log("Moved Left. X--,Y");
 		} else {
-			System.err.println("Reached end: Left");
+			Log("Reached end: Left. X--,Y");
 
 		}
 
@@ -322,14 +321,14 @@ public class Robot {
 	}
 
 	private void SetCurrent() {
-		_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Current;
+		_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.C;
 	}
 
 	public int[][] ScanForObstacles() {
 		int[][] result = new int[_maxNumberObstacles][_maxNumberObstacles];
 
 		Enums.Orientation[] scanLineOrientations = GetScanLineOrientations(this.Orientation);
-		
+
 		for (int i = 0; i < scanLineOrientations.length; i++) {
 			Scan(GetNextPositionBasedOnOrientation(scanLineOrientations[i]));
 		}
@@ -349,10 +348,9 @@ public class Robot {
 		int y = _currentY + (1 * lineToScan[1]);
 
 		while (!foundObstacle && ValidGridSpace(x, y)) {
-			
-			if (_grid.Grid[x][y] == Enums.GridValues.Obstacle) {
-				Log("Found Obstacle");
-				_personalGrid.Grid[x][y] = Enums.GridValues.Obstacle;
+
+			if (_grid.Grid[x][y] == Enums.GridValues.O) {
+				_personalGrid.Grid[x][y] = Enums.GridValues.O;
 				break;
 			}
 
@@ -362,46 +360,47 @@ public class Robot {
 
 	}
 
-	private Enums.Orientation[] GetScanLineOrientations(Enums.Orientation orientation) {
+	private Enums.Orientation[] GetScanLineOrientations(
+			Enums.Orientation orientation) {
 		Enums.Orientation[] result = new Enums.Orientation[3];
 
 		result[0] = orientation;
 
 		switch (orientation) {
 		case Down:
-			result[1] = Enums.Orientation.DownLeft; 
+			result[1] = Enums.Orientation.DownLeft;
 			result[2] = Enums.Orientation.DownRight;
 			break;
 		case DownLeft:
-			result[1] = Enums.Orientation.Left; 
+			result[1] = Enums.Orientation.Left;
 			result[2] = Enums.Orientation.Down;
 			break;
 		case DownRight:
-			result[1] = Enums.Orientation.Down; 
+			result[1] = Enums.Orientation.Down;
 			result[2] = Enums.Orientation.Right;
 			break;
 		case Left:
-			result[1] = Enums.Orientation.DownLeft; 
+			result[1] = Enums.Orientation.DownLeft;
 			result[2] = Enums.Orientation.UpLeft;
 			break;
 		case None:
-			result[1] = Enums.Orientation.None; 
+			result[1] = Enums.Orientation.None;
 			result[2] = Enums.Orientation.None;
 			break;
 		case Right:
-			result[1] = Enums.Orientation.UpRight; 
+			result[1] = Enums.Orientation.UpRight;
 			result[2] = Enums.Orientation.DownRight;
 			break;
 		case Up:
-			result[1] = Enums.Orientation.UpLeft; 
+			result[1] = Enums.Orientation.UpLeft;
 			result[2] = Enums.Orientation.UpRight;
 			break;
 		case UpLeft:
-			result[1] = Enums.Orientation.Up; 
+			result[1] = Enums.Orientation.Up;
 			result[2] = Enums.Orientation.Left;
 			break;
 		case UpRight:
-			result[1] = Enums.Orientation.Up; 
+			result[1] = Enums.Orientation.Up;
 			result[2] = Enums.Orientation.Right;
 			break;
 		default:
@@ -417,7 +416,8 @@ public class Robot {
 	}
 
 	private void Log(String string) {
-		System.err.println(string);
+
+		// System.err.println(string);
 	}
 
 }
