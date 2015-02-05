@@ -11,6 +11,9 @@ public class ExpertSystem {
 		Robot robot = new Robot(world, 0, 0, 4, 4);
 
 		robot.ScanForObstacles();
+		
+		
+		System.out.println(robot._personalGrid.toString());
 
 	}
 }

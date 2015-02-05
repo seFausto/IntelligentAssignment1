@@ -14,8 +14,8 @@ public class Robot {
 
 	final int _maxSpaceX;
 	final int _maxSpaceY;
-	final int _maxNumberObstacles = 3; 
-	
+	final int _maxNumberObstacles = 3;
+
 	public Robot(World grid, int startingX, int startingY, int goalX, int goalY) {
 		_grid = grid;
 		_personalGrid = new World(grid.SizeX, grid.SizeY);
@@ -81,8 +81,7 @@ public class Robot {
 
 	}
 
-	public int[] GetNextPositionBasedOnOrientation(Enums.Orientation orientation)
-	{
+	public int[] GetNextPositionBasedOnOrientation(Enums.Orientation orientation) {
 		int[] result = new int[2];
 		switch (orientation) {
 		case Down:
@@ -122,10 +121,10 @@ public class Robot {
 			result[1] = -1;
 			break;
 		}
-		
+
 		return result;
 	}
-	
+
 	public Boolean Move(Enums.Orientation orientation) {
 		Boolean result = false;
 
@@ -256,7 +255,7 @@ public class Robot {
 			Orientation = Enums.Orientation.DownLeft;
 			SetCurrent();
 
-			System.err.println("Moved DownLeft. X--, Y++" );
+			System.err.println("Moved DownLeft. X--, Y++");
 		} else {
 			System.err.println("Reached end: DownLeft.  X--, Y++");
 		}
@@ -325,44 +324,92 @@ public class Robot {
 	private void SetCurrent() {
 		_personalGrid.Grid[_currentX][_currentY] = Enums.GridValues.Current;
 	}
-	
-	public int[][] ScanForObstacles()
-	{
-		int[][] result = new int [_maxNumberObstacles][_maxNumberObstacles];
+
+	public int[][] ScanForObstacles() {
+		int[][] result = new int[_maxNumberObstacles][_maxNumberObstacles];
+
+		Enums.Orientation[] scanLineOrientations = GetScanLineOrientations(this.Orientation);
 		
-		int [] lineToScan = this.GetNextPositionBasedOnOrientation(Orientation);
-		
-		Scan(lineToScan);
-		
-		
+		for (int i = 0; i < scanLineOrientations.length; i++) {
+			Scan(GetNextPositionBasedOnOrientation(scanLineOrientations[i]));
+		}
+
 		return result;
 	}
 
 	private void Scan(int[] lineToScan) {
-		if (lineToScan.length != 2)
-		{
+		if (lineToScan.length != 2) {
 			Log("Something went wrong, lineToScan is diff than 2");
 			return;
 		}
-		
+
 		Boolean foundObstacle = false;
-		
+
 		int x = _currentX + (1 * lineToScan[0]);
 		int y = _currentY + (1 * lineToScan[1]);
-		
-		while (!foundObstacle && ValidGridSpace(x, y))
-		{
-			if (_grid.Grid[x][y] == Enums.GridValues.Obstacle)
-			{
+
+		while (!foundObstacle && ValidGridSpace(x, y)) {
+			
+			if (_grid.Grid[x][y] == Enums.GridValues.Obstacle) {
 				Log("Found Obstacle");
+				_personalGrid.Grid[x][y] = Enums.GridValues.Obstacle;
 				break;
 			}
-			
+
 			x = x + (1 * lineToScan[0]);
 			y = y + (1 * lineToScan[1]);
 		}
-		
-		
+
+	}
+
+	private Enums.Orientation[] GetScanLineOrientations(Enums.Orientation orientation) {
+		Enums.Orientation[] result = new Enums.Orientation[3];
+
+		result[0] = orientation;
+
+		switch (orientation) {
+		case Down:
+			result[1] = Enums.Orientation.DownLeft; 
+			result[2] = Enums.Orientation.DownRight;
+			break;
+		case DownLeft:
+			result[1] = Enums.Orientation.Left; 
+			result[2] = Enums.Orientation.Down;
+			break;
+		case DownRight:
+			result[1] = Enums.Orientation.Down; 
+			result[2] = Enums.Orientation.Right;
+			break;
+		case Left:
+			result[1] = Enums.Orientation.DownLeft; 
+			result[2] = Enums.Orientation.UpLeft;
+			break;
+		case None:
+			result[1] = Enums.Orientation.None; 
+			result[2] = Enums.Orientation.None;
+			break;
+		case Right:
+			result[1] = Enums.Orientation.UpRight; 
+			result[2] = Enums.Orientation.DownRight;
+			break;
+		case Up:
+			result[1] = Enums.Orientation.UpLeft; 
+			result[2] = Enums.Orientation.UpRight;
+			break;
+		case UpLeft:
+			result[1] = Enums.Orientation.Up; 
+			result[2] = Enums.Orientation.Left;
+			break;
+		case UpRight:
+			result[1] = Enums.Orientation.Up; 
+			result[2] = Enums.Orientation.Right;
+			break;
+		default:
+			break;
+		}
+
+		return result;
+
 	}
 
 	private boolean ValidGridSpace(int x, int y) {
