@@ -35,44 +35,90 @@ public class Robot {
 	public int MoveTowardsGoal() {
 		int numberOfMoves = 0;
 		Boolean reachedGoal = false;
-		// Enums.Orientation orientation = Orientation;
+		Enums.Orientation nextOrientation = Orientation;
 		do {
+
 			ScanForObstacles();
-			Orientation = GetOrientationBasedOnMovement();
-			int[] movement = GetNextMove(Orientation);
+			System.out.println(_personalGrid.toString());
+
+			if (nextOrientation != null)
+				Orientation = nextOrientation;
+			else
+				Orientation = GetOrientationBasedOnMovement();
+
+			Enums.Orientation possibleOrientation = GetPossibleMove(
+					Orientation, 0);
+			int[] movement = GetNextMove(possibleOrientation);
 			int[] nextPosition = GetNextPosition(_currentX, _currentY,
 					movement[0], movement[1]);
+
+			Boolean isNextPositionObstacle = IsNextPoistionObstacle(nextPosition);
+
+			// check if there is an obstacle, if so, try to move the space on
+			// the left,
+			if (isNextPositionObstacle) {
+				// get new position to the left
+				possibleOrientation = GetPossibleMove(Orientation, 1);
+				movement = GetNextMove(possibleOrientation);
+				nextPosition = GetNextPosition(_currentX, _currentY,
+						movement[0], movement[1]);
+
+				isNextPositionObstacle = IsNextPoistionObstacle(nextPosition);
+
+			}
+
+			// check if there is an obstale, if so, try to move to the right
+			if (isNextPositionObstacle) {
+				possibleOrientation = GetPossibleMove(Orientation, 2);
+				movement = GetNextMove(possibleOrientation);
+				nextPosition = GetNextPosition(_currentX, _currentY,
+						movement[0], movement[1]);
+
+				isNextPositionObstacle = IsNextPoistionObstacle(nextPosition);
+
+			}
+
+			if (isNextPositionObstacle) {
+				// rotate
+				continue;
+			}
 
 			// Check if it can move in the intended direction
 			if (IsValidGridSpace(nextPosition[0], nextPosition[1])) {
 				if (IsSpaceEmpty(nextPosition[0], nextPosition[1])) {
-					reachedGoal = Move(GetOrientationBasedOnMovement());
-				}
-				else
-				{
+					reachedGoal = Move(possibleOrientation);
+					Orientation = GetOrientationBasedOnMovement();
+				} else {
 					Orientation = GetNextOrientation(Orientation, true);
 				}
-			}
-			else
-			{
+			} else {
 				Orientation = GetNextOrientation(Orientation, true);
 			}
 
 			numberOfMoves++;
+			nextOrientation = null;
+
 		} while (!reachedGoal);
 
 		return numberOfMoves;
 	}
 
-	private Enums.Orientation GetNextOrientation(
-			Enums.Orientation orientation, boolean rotateClockwise) {
+	private Boolean IsNextPoistionObstacle(int[] nextPosition) {
+		int x = nextPosition[0];
+		int y = nextPosition[1];
+
+		return _grid.Grid[x][y] == Enums.GridValues.O;
+
+	}
+
+	private Enums.Orientation GetNextOrientation(Enums.Orientation orientation,
+			boolean rotateClockwise) {
 		Enums.Orientation result = Enums.Orientation.None;
-		
-		if (rotateClockwise)
-		{}
-		else
-		{}
-		
+
+		if (rotateClockwise) {
+		} else {
+		}
+
 		return result;
 	}
 
@@ -121,6 +167,61 @@ public class Robot {
 
 	}
 
+	public Enums.Orientation GetPossibleMove(Enums.Orientation orientation,
+			int numberOfOrientation) {
+		Enums.Orientation[] result = new Enums.Orientation[3];
+
+		switch (orientation) {
+		case Down:
+			result[0] = Enums.Orientation.Down;
+			result[1] = Enums.Orientation.DownLeft;
+			result[2] = Enums.Orientation.DownRight;
+			break;
+		case DownLeft:
+			result[0] = Enums.Orientation.Down;
+			result[1] = Enums.Orientation.DownLeft;
+			result[2] = Enums.Orientation.Left;
+			break;
+		case DownRight:
+			result[0] = Enums.Orientation.Down;
+			result[1] = Enums.Orientation.Right;
+			result[2] = Enums.Orientation.DownRight;
+			break;
+		case Left:
+			result[0] = Enums.Orientation.UpLeft;
+			result[1] = Enums.Orientation.DownLeft;
+			result[2] = Enums.Orientation.Left;
+			break;
+		case Right:
+			result[0] = Enums.Orientation.Right;
+			result[1] = Enums.Orientation.UpRight;
+			result[2] = Enums.Orientation.DownRight;
+			break;
+		case Up:
+			result[0] = Enums.Orientation.Up;
+			result[1] = Enums.Orientation.UpLeft;
+			result[2] = Enums.Orientation.UpRight;
+			break;
+		case UpLeft:
+			result[0] = Enums.Orientation.Up;
+			result[1] = Enums.Orientation.UpLeft;
+			result[2] = Enums.Orientation.Left;
+			break;
+		case UpRight:
+			result[0] = Enums.Orientation.Up;
+			result[1] = Enums.Orientation.Right;
+			result[2] = Enums.Orientation.UpRight;
+			break;
+		default:
+			result[0] = Enums.Orientation.None;
+			result[1] = Enums.Orientation.None;
+			result[2] = Enums.Orientation.None;
+			break;
+		}
+
+		return result[numberOfOrientation];
+	}
+
 	public int[] GetNextMove(Enums.Orientation orientation) {
 		int[] result = new int[2];
 		switch (orientation) {
@@ -159,6 +260,9 @@ public class Robot {
 		case UpRight:
 			result[0] = 1;
 			result[1] = -1;
+			break;
+		default:
+			Log("Error getting next move");
 			break;
 		}
 
@@ -403,8 +507,13 @@ public class Robot {
 			}
 
 			int[] next = GetNextPosition(x, y, lineToScan[0], lineToScan[1]);
-			x = next[0];
-			y = next[1];
+
+			if (next[0] == x && next[1] == y) {
+				break;
+			} else {
+				x = next[0];
+				y = next[1];
+			}
 		}
 
 	}
