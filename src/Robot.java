@@ -1,3 +1,4 @@
+
 public class Robot {
 
 	World _grid;
@@ -67,7 +68,7 @@ public class Robot {
 
 			}
 
-			// check if there is an obstale, if so, try to move to the right
+			// check if there is an obstacle, if so, try to move to the right
 			if (isNextPositionObstacle) {
 				possibleOrientation = GetPossibleMove(Orientation, 2);
 				movement = GetNextMove(possibleOrientation);
@@ -80,6 +81,7 @@ public class Robot {
 
 			if (isNextPositionObstacle) {
 				// rotate
+				nextOrientation = RotateCounterClockwise(Orientation, false);
 				continue;
 			}
 
@@ -89,10 +91,10 @@ public class Robot {
 					reachedGoal = Move(possibleOrientation);
 					Orientation = GetOrientationBasedOnMovement();
 				} else {
-					Orientation = GetNextOrientation(Orientation, true);
+					Orientation = RotateCounterClockwise(Orientation, false);
 				}
 			} else {
-				Orientation = GetNextOrientation(Orientation, true);
+				Orientation = RotateCounterClockwise(Orientation, false);
 			}
 
 			numberOfMoves++;
@@ -107,16 +109,50 @@ public class Robot {
 		int x = nextPosition[0];
 		int y = nextPosition[1];
 
+		if (x < 0 || x > _maxSpaceX)
+			return true;
+
+		if (y < 0 || y > _maxSpaceY)
+			return true;
+
+		if (!IsValidGridSpace(nextPosition[0], nextPosition[1]))
+			return true;
+
 		return _grid.Grid[x][y] == Enums.GridValues.O;
 
 	}
 
-	private Enums.Orientation GetNextOrientation(Enums.Orientation orientation,
-			boolean rotateClockwise) {
+	private Enums.Orientation RotateCounterClockwise(
+			Enums.Orientation orientation, boolean rotateClockwise) {
 		Enums.Orientation result = Enums.Orientation.None;
 
-		if (rotateClockwise) {
-		} else {
+		switch (orientation) {
+		case Down:
+			result = Enums.Orientation.DownRight;
+			break;
+		case DownLeft:
+			result = Enums.Orientation.Down;
+			break;
+		case DownRight:
+			result = Enums.Orientation.Right;
+			break;
+		case Left:
+			result = Enums.Orientation.DownLeft;
+			break;
+		case Right:
+			result = Enums.Orientation.UpRight;
+			break;
+		case Up:
+			result = Enums.Orientation.UpRight;
+			break;
+		case UpLeft:
+			result = Enums.Orientation.Left;
+			break;
+		case UpRight:
+			result = Enums.Orientation.Up;
+			break;
+		default:
+			break;
 		}
 
 		return result;
@@ -174,23 +210,23 @@ public class Robot {
 		switch (orientation) {
 		case Down:
 			result[0] = Enums.Orientation.Down;
-			result[1] = Enums.Orientation.DownLeft;
-			result[2] = Enums.Orientation.DownRight;
+			result[2] = Enums.Orientation.DownLeft;
+			result[1] = Enums.Orientation.DownRight;
 			break;
 		case DownLeft:
-			result[0] = Enums.Orientation.Down;
-			result[1] = Enums.Orientation.DownLeft;
+			result[1] = Enums.Orientation.Down;
+			result[0] = Enums.Orientation.DownLeft;
 			result[2] = Enums.Orientation.Left;
 			break;
 		case DownRight:
-			result[0] = Enums.Orientation.Down;
+			result[2] = Enums.Orientation.Down;
 			result[1] = Enums.Orientation.Right;
-			result[2] = Enums.Orientation.DownRight;
+			result[0] = Enums.Orientation.DownRight;
 			break;
 		case Left:
-			result[0] = Enums.Orientation.UpLeft;
+			result[2] = Enums.Orientation.UpLeft;
 			result[1] = Enums.Orientation.DownLeft;
-			result[2] = Enums.Orientation.Left;
+			result[0] = Enums.Orientation.Left;
 			break;
 		case Right:
 			result[0] = Enums.Orientation.Right;
@@ -199,18 +235,18 @@ public class Robot {
 			break;
 		case Up:
 			result[0] = Enums.Orientation.Up;
-			result[1] = Enums.Orientation.UpLeft;
-			result[2] = Enums.Orientation.UpRight;
+			result[2] = Enums.Orientation.UpLeft;
+			result[1] = Enums.Orientation.UpRight;
 			break;
 		case UpLeft:
-			result[0] = Enums.Orientation.Up;
-			result[1] = Enums.Orientation.UpLeft;
-			result[2] = Enums.Orientation.Left;
+			result[2] = Enums.Orientation.Up;
+			result[0] = Enums.Orientation.UpLeft;
+			result[1] = Enums.Orientation.Left;
 			break;
 		case UpRight:
-			result[0] = Enums.Orientation.Up;
-			result[1] = Enums.Orientation.Right;
-			result[2] = Enums.Orientation.UpRight;
+			result[1] = Enums.Orientation.Up;
+			result[2] = Enums.Orientation.Right;
+			result[0] = Enums.Orientation.UpRight;
 			break;
 		default:
 			result[0] = Enums.Orientation.None;
