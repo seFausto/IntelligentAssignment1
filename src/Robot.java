@@ -1,4 +1,3 @@
-
 public class Robot {
 
 	World _grid;
@@ -34,6 +33,7 @@ public class Robot {
 	}
 
 	public int MoveTowardsGoal() {
+		// Start the robot to move towards goal
 		int numberOfMoves = 0;
 		Boolean reachedGoal = false;
 		Enums.Orientation nextOrientation = Orientation;
@@ -42,6 +42,7 @@ public class Robot {
 			ScanForObstacles();
 			System.out.println(_personalGrid.toString());
 
+			// This is used for when a rotation is needed.
 			if (nextOrientation != null)
 				Orientation = nextOrientation;
 			else
@@ -49,7 +50,10 @@ public class Robot {
 
 			Enums.Orientation possibleOrientation = GetPossibleMove(
 					Orientation, 0);
+
 			int[] movement = GetNextMove(possibleOrientation);
+
+			// Get grid position of next possible move
 			int[] nextPosition = GetNextPosition(_currentX, _currentY,
 					movement[0], movement[1]);
 
@@ -81,7 +85,7 @@ public class Robot {
 
 			if (isNextPositionObstacle) {
 				// rotate
-				nextOrientation = RotateCounterClockwise(Orientation, false);
+				nextOrientation = RotateCounterClockwise(Orientation);
 				continue;
 			}
 
@@ -91,10 +95,10 @@ public class Robot {
 					reachedGoal = Move(possibleOrientation);
 					Orientation = GetOrientationBasedOnMovement();
 				} else {
-					Orientation = RotateCounterClockwise(Orientation, false);
+					Orientation = RotateCounterClockwise(Orientation);
 				}
 			} else {
-				Orientation = RotateCounterClockwise(Orientation, false);
+				Orientation = RotateCounterClockwise(Orientation);
 			}
 
 			numberOfMoves++;
@@ -123,9 +127,10 @@ public class Robot {
 	}
 
 	private Enums.Orientation RotateCounterClockwise(
-			Enums.Orientation orientation, boolean rotateClockwise) {
+			Enums.Orientation orientation) {
 		Enums.Orientation result = Enums.Orientation.None;
 
+		// Get next orientation for counter clockwise rotation
 		switch (orientation) {
 		case Down:
 			result = Enums.Orientation.DownRight;
@@ -167,6 +172,7 @@ public class Robot {
 	}
 
 	public Enums.Orientation GetOrientationBasedOnMovement() {
+		// After a move, calculate where the robot is pointing to
 		Enums.Orientation result = Enums.Orientation.Down;
 
 		int resultX = _goalX - _currentX;
@@ -205,6 +211,9 @@ public class Robot {
 
 	public Enums.Orientation GetPossibleMove(Enums.Orientation orientation,
 			int numberOfOrientation) {
+		// Get the possible orientations based on current.
+		// Used when actually rotating
+
 		Enums.Orientation[] result = new Enums.Orientation[3];
 
 		switch (orientation) {
@@ -259,6 +268,7 @@ public class Robot {
 	}
 
 	public int[] GetNextMove(Enums.Orientation orientation) {
+		// Get the + or - for next move
 		int[] result = new int[2];
 		switch (orientation) {
 		case Down:
@@ -505,6 +515,7 @@ public class Robot {
 	}
 
 	public void ScanForObstacles() {
+
 		Enums.Orientation[] scanLineOrientations = GetScanLineOrientations(this.Orientation);
 
 		for (int i = 0; i < scanLineOrientations.length; i++) {
@@ -534,7 +545,7 @@ public class Robot {
 				lineToScan[1])[0];
 		int y = GetNextPosition(_currentX, _currentY, lineToScan[0],
 				lineToScan[1])[1];
-
+		// keep scanning until we reach the end, or find an obstacle
 		while (!foundObstacle && IsValidGridSpace(x, y)) {
 
 			if (_grid.Grid[x][y] == Enums.GridValues.O) {
@@ -556,6 +567,8 @@ public class Robot {
 
 	private Enums.Orientation[] GetScanLineOrientations(
 			Enums.Orientation orientation) {
+		// Because the robot scans forward and in 45 degree angles, we have to
+		// get the three scan lines
 		Enums.Orientation[] result = new Enums.Orientation[3];
 
 		result[0] = orientation;

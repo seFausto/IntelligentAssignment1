@@ -8,6 +8,7 @@ public class World {
 		SizeY = sizeY;
 		Grid = new Enums.GridValues[SizeX][SizeY];
 
+		//create the default world. Everything is empty
 		for (int columns = 0; columns < SizeX; columns++) {
 			for (int rows = 0; rows < SizeY; rows++)
 				Grid[columns][rows] = Enums.GridValues.E;
@@ -15,8 +16,10 @@ public class World {
 
 	}
 
+	
 	public String toString() {
 		String result = "";
+		//Easily display the world
 		for (int rows = 0; rows < SizeX; rows++) {
 			for (int columns = 0; columns < SizeY; columns++) {
 				result += Grid[columns][rows].toString() + " ";
