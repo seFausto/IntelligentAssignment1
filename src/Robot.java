@@ -40,7 +40,7 @@ public class Robot {
 		do {
 
 			ScanForObstacles();
-			System.out.println(_personalGrid.toString());
+			Log(_personalGrid.toString());
 
 			// This is used for when a rotation is needed.
 			if (nextOrientation != null)
