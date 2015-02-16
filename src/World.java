@@ -16,6 +16,21 @@ public class World {
 
 	}
 
+
+	public World(int sizeX, int sizeY, int goalX, int goalY) {
+		SizeX = sizeX;
+		SizeY = sizeY;
+		Grid = new Enums.GridValues[SizeX][SizeY];
+
+		//create the default world. Everything is empty
+		for (int columns = 0; columns < SizeX; columns++) {
+			for (int rows = 0; rows < SizeY; rows++)
+				Grid[columns][rows] = Enums.GridValues.E;
+		}
+		
+		Grid[goalX][goalY] = Enums.GridValues.G;
+
+	}
 	
 	public String toString() {
 		String result = "";
