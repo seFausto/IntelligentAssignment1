@@ -33,6 +33,22 @@ public class Robot {
 		SetCurrent();
 		Orientation = Enums.Orientation.Down;
 	}
+	
+	public Robot(World grid, int startingX, int startingY, int goalX, int goalY, String orientation) {
+		_grid = grid;
+		_personalGrid = new World(grid.SizeX, grid.SizeY);
+		_maxSpaceX = grid.SizeX - 1;
+		_maxSpaceY = grid.SizeY - 1;
+
+		_currentX = startingX;
+		_currentY = startingY;
+
+		_goalX = goalX;
+		_goalY = goalY;
+
+		SetCurrent();
+		Orientation = Enums.Orientation.valueOf(orientation);
+	}
 
 	public int MoveTowardsGoal() {
 		// Start the robot to move towards goal
@@ -45,9 +61,9 @@ public class Robot {
 			ScanForObstacles();
 			Log(_personalGrid.toString());
 			
-			if(numberOfRotations >= 8)
+			if(numberOfRotations > 8)
 			{
-				Log("NumberOfRotations is 8 or greater. This means that the robot is locked");
+				Log("NumberOfRotations is " + numberOfRotations + " or greater. This means that the robot is locked");
 				break;
 			}
 			// This is used for when a rotation is needed.
@@ -142,7 +158,8 @@ public class Robot {
 	private Enums.Orientation RotateCounterClockwise(
 			Enums.Orientation orientation) {
 		Enums.Orientation result = Enums.Orientation.None;
-
+		
+		
 		// Get next orientation for counter clockwise rotation
 		switch (orientation) {
 		case Down:
@@ -161,7 +178,7 @@ public class Robot {
 			result = Enums.Orientation.UpRight;
 			break;
 		case Up:
-			result = Enums.Orientation.UpRight;
+			result = Enums.Orientation.UpLeft;
 			break;
 		case UpLeft:
 			result = Enums.Orientation.Left;
@@ -173,6 +190,8 @@ public class Robot {
 			break;
 		}
 
+		Log("Rotated: " + result.toString());
+		
 		return result;
 	}
 
@@ -636,8 +655,7 @@ public class Robot {
 	}
 
 	private void Log(String string) {
-
-		// System.err.println(string);
+		System.out.println(string);
 	}
 
 }

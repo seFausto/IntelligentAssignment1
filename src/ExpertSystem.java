@@ -15,6 +15,8 @@ public class ExpertSystem {
 		int[] goal = new int[2];
 		int[] initial = new int[2];
 		int numberOfObstacles = 0;
+		String orientation = "Down";
+		
 		try {
 			// Expected format:
 			// first value M size of grid
@@ -44,8 +46,12 @@ public class ExpertSystem {
 			goal[0] = Integer.parseInt(goalXY[0]);
 			goal[1] = Integer.parseInt(goalXY[1]);
 		
-			// last argument file
+			//file
 			outputFile = args[4];
+			
+			//orientation
+			if (args.length >=5)
+				orientation = args[5];
 
 		} catch (Exception e) {
 			System.out.println("Please enter a correct inputs");
@@ -58,7 +64,7 @@ public class ExpertSystem {
 			world.Grid[obstacles[i][0]][obstacles[i][1]] = Enums.GridValues.O;
 		}
 		
-		Robot robot = new Robot(world, initial[0], initial[1], goal[0], goal[1]);
+		Robot robot = new Robot(world, initial[0], initial[1], goal[0], goal[1], orientation);
 
 		robot.MoveTowardsGoal();
 		
