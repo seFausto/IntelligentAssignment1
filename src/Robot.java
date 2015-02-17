@@ -11,6 +11,8 @@ public class Robot {
 
 	int _goalX;
 	int _goalY;
+	
+	int numberOfRotations;
 
 	final int _maxSpaceX;
 	final int _maxSpaceY;
@@ -35,13 +37,19 @@ public class Robot {
 	public int MoveTowardsGoal() {
 		// Start the robot to move towards goal
 		int numberOfMoves = 0;
+		numberOfRotations = 0;
 		Boolean reachedGoal = false;
 		Enums.Orientation nextOrientation = Orientation;
 		do {
 
 			ScanForObstacles();
 			Log(_personalGrid.toString());
-
+			
+			if(numberOfRotations >= 8)
+			{
+				Log("NumberOfRotations is 8 or greater. This means that the robot is locked");
+				break;
+			}
 			// This is used for when a rotation is needed.
 			if (nextOrientation != null)
 				Orientation = nextOrientation;
@@ -86,6 +94,7 @@ public class Robot {
 			if (isNextPositionObstacle) {
 				// rotate
 				nextOrientation = RotateCounterClockwise(Orientation);
+				numberOfRotations++;
 				continue;
 			}
 
@@ -94,11 +103,15 @@ public class Robot {
 				if (IsSpaceEmpty(nextPosition[0], nextPosition[1])) {
 					reachedGoal = Move(possibleOrientation);
 					Orientation = GetOrientationBasedOnMovement();
+					//we reset the number of rotations
+					numberOfRotations = 0;
 				} else {
 					Orientation = RotateCounterClockwise(Orientation);
+					numberOfRotations++;
 				}
 			} else {
 				Orientation = RotateCounterClockwise(Orientation);
+				numberOfRotations++;
 			}
 
 			numberOfMoves++;

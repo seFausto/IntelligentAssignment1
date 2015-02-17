@@ -39,7 +39,6 @@ public class ExpertSystem {
 			
 			}
 			
-			
 			// x,y goal
 			String[] goalXY = args[3].split(",");
 			goal[0] = Integer.parseInt(goalXY[0]);
@@ -62,10 +61,9 @@ public class ExpertSystem {
 		Robot robot = new Robot(world, initial[0], initial[1], goal[0], goal[1]);
 
 		robot.MoveTowardsGoal();
-
-	//	System.out.println(world.toString());
+		
 		System.out.println(robot._personalGrid.toString());
-
+		System.out.println("A File has been created: " + outputFile);
 		File.WriteFile(outputFile, robot._personalGrid.toString());
 
 	}
